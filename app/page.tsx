@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import NumberInputCard from "@/components/NumberInputCard";
-import type { NumberInputExercise } from "@/lib/schemas";
+import CircleCard from "@/components/CircleCard";
+import type { NumberInputExercise, CircleExercise } from "@/lib/schemas";
 
 type Message = {
   text: string | null;
-  exercise?: NumberInputExercise;
+  numberExercise?: NumberInputExercise;
+  circleExercise?: CircleExercise;
 };
 
 export default function Home() {
@@ -25,9 +27,15 @@ export default function Home() {
     });
     const data = await response.json();
 
-    const tutorMessage: Message = { text: null, exercise: data.exercise };
+    const tutorMessage: Message = { text: null };
     if (data.reply) {
       tutorMessage.text = "Tutor: " + data.reply;
+    }
+    if (data.tool === "create_number_input_exercise") {
+      tutorMessage.numberExercise = data.exercise;
+    }
+    if (data.tool === "create_circle_exercise") {
+      tutorMessage.circleExercise = data.exercise;
     }
     setMessages((prev) => [...prev, tutorMessage]);
   }
@@ -40,7 +48,8 @@ export default function Home() {
           {messages.map((message, i) => (
             <div key={i}>
               {message.text && <p>{message.text}</p>}
-              {message.exercise && <NumberInputCard exercise={message.exercise} />}
+              {message.numberExercise && <NumberInputCard exercise={message.numberExercise} />}
+              {message.circleExercise && <CircleCard exercise={message.circleExercise} />}
             </div>
           ))}
         </div>
