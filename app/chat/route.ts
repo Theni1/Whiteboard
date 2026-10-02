@@ -4,6 +4,11 @@ import { NumberInputExercise } from "@/lib/schemas";
 
 const openai = new OpenAI();
 
+const SYSTEM_PROMPT = `You're a maths tutor that shows students interactive exercises on a whiteboard.
+When the student asks for practice, call a tool. Otherwise reply in one or two plain sentences, no markdown or LaTeX.
+For triangles, pick legs a and b from a Pythagorean triple (3-4-5 or 6-8-10) and place the points exactly at (1, 1), (1 + a, 1) and (1, 1 + b).
+Label every side with its length or "?".`;
+
 const tools = [
   zodFunction({
     name: "create_number_input_exercise",
@@ -16,9 +21,9 @@ export async function POST(request: Request) {
   const body = await request.json();
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-5.4-mini",
+    model: "gpt-5.4",
     messages: [
-      { role: "system", content: "You are a friendly maths tutor for students aged 13 to 18." },
+      { role: "system", content: SYSTEM_PROMPT },
       { role: "user", content: body.message },
     ],
     tools: tools,
