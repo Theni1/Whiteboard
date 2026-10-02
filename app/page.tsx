@@ -32,15 +32,28 @@ export default function Home() {
   }
 
   return (
-    <main>
-      {messages.map((message, i) => (
-        <div key={i}>
-          {message.text && <p>{message.text}</p>}
-          {message.exercise && <NumberInputCard exercise={message.exercise} />}
+    <main className="h-screen bg-stone-50 text-stone-900">
+      <div className="mx-auto flex h-full max-w-2xl flex-col px-4">
+        <h1 className="border-b border-stone-400 py-4 text-center text-2xl font-medium">Whiteboard</h1>
+        <div className="flex-1 overflow-y-auto py-4">
+          {messages.map((message, i) => (
+            <div key={i}>
+              {message.text && <p>{message.text}</p>}
+              {message.exercise && <NumberInputCard exercise={message.exercise} />}
+            </div>
+          ))}
         </div>
-      ))}
-      <input className="border" value={input} onChange={(e) => setInput(e.target.value)} />
-      <button onClick={send}>Send</button>
+        <div className="flex gap-2 border-t border-stone-400 pt-4 pb-10">
+          <input
+            className="flex-1 rounded border border-stone-500 bg-white px-3 py-2"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <button className="rounded border border-stone-500 bg-white px-4" onClick={send}>
+            Send
+          </button>
+        </div>
+      </div>
     </main>
   );
 }
