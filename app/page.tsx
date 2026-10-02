@@ -1,27 +1,46 @@
 "use client";
 
+import { useState } from "react";
 import NumberInputCard from "@/components/NumberInputCard";
+import type { NumberInputExercise } from "@/lib/schemas";
+
+type Message = {
+  text: string | null;
+  exercise?: NumberInputExercise;
+};
 
 export default function Home() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+
+  async function send() {
+    setMessages((prev) => [...prev, { text: "You: " + input }]);
+    setInput("");
+
+    const response = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: input }),
+    });
+    const data = await response.json();
+
+    const tutorMessage: Message = { text: null, exercise: data.exercise };
+    if (data.reply) {
+      tutorMessage.text = "Tutor: " + data.reply;
+    }
+    setMessages((prev) => [...prev, tutorMessage]);
+  }
+
   return (
     <main>
-      <NumberInputCard
-        exercise={{
-          task: "What is the length of the hypotenuse?",
-          shapes: [
-            { type: "point", id: "A", x: 0, y: 0 },
-            { type: "point", id: "B", x: 4, y: 0 },
-            { type: "point", id: "C", x: 0, y: 3 },
-            { type: "segment", from: "A", to: "B" },
-            { type: "segment", from: "A", to: "C" },
-            { type: "segment", from: "B", to: "C" },
-            { type: "label", text: "4", x: 2, y: -0.4 },
-            { type: "label", text: "3", x: -0.4, y: 1.5 },
-            { type: "label", text: "?", x: 2.3, y: 1.8 },
-          ],
-          answer: 5,
-        }}
-      />
+      {messages.map((message, i) => (
+        <div key={i}>
+          {message.text && <p>{message.text}</p>}
+          {message.exercise && <NumberInputCard exercise={message.exercise} />}
+        </div>
+      ))}
+      <input className="border" value={input} onChange={(e) => setInput(e.target.value)} />
+      <button onClick={send}>Send</button>
     </main>
   );
 }

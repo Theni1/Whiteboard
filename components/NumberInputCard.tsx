@@ -21,7 +21,7 @@ export default function NumberInputCard(props: { exercise: NumberInputExercise }
   return (
     <div>
       <p>{props.exercise.task}</p>
-      <Mafs pan={false}>
+      <Mafs pan={false} viewBox={{ x: [-1, 10], y: [-1, 10] }}>
         {props.exercise.shapes.map((shape, i) => {
           if (shape.type === "point") {
             return <Point key={i} x={shape.x} y={shape.y} />;
