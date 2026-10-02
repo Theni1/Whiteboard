@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 import { zodFunction } from "openai/helpers/zod";
-import { NumberInputExercise, CircleExercise } from "@/lib/schemas";
+import { NumberInputExercise, CircleExercise, LineExercise } from "@/lib/schemas";
 
 const openai = new OpenAI();
 
@@ -8,7 +8,8 @@ const SYSTEM_PROMPT = `You're a maths tutor that shows students interactive exer
 When the student asks for practice, call a tool. Otherwise reply in one or two plain sentences, no markdown or LaTeX.
 For triangles, pick legs a and b from a Pythagorean triple (3-4-5 or 6-8-10) and place the points exactly at (1, 1), (1 + a, 1) and (1, 1 + b).
 Label every side with its length or "?", placing the labels exactly at (1 + a/2, 0.3), (0.3, 1 + b/2) and (1.6 + a/2, 1.6 + b/2).
-For circles, use a whole-number center (not the origin) and radius, keep the whole circle between -5 and 5, and state both in the task.`;
+For circles, use a whole-number center (not the origin) and radius, keep the whole circle between -5 and 5, and state both in the task.
+For lines, use a whole-number slope between -3 and 3 and a non-zero whole-number intercept between -4 and 4, and give the full equation in the task.`;
 
 const tools = [
   zodFunction({
@@ -20,6 +21,11 @@ const tools = [
     name: "create_circle_exercise",
     description: "Show a grid where the student drags a center and an edge point to draw a given circle.",
     parameters: CircleExercise,
+  }),
+  zodFunction({
+    name: "create_line_exercise",
+    description: "Show a grid where the student drags two points to draw a given straight line.",
+    parameters: LineExercise,
   }),
 ];
 
@@ -47,6 +53,11 @@ export async function POST(request: Request) {
 
   if (tool === "create_circle_exercise") {
     const exercise = CircleExercise.parse(args);
+    return Response.json({ reply: message.content, tool: tool, exercise: exercise });
+  }
+
+  if (tool === "create_line_exercise") {
+    const exercise = LineExercise.parse(args);
     return Response.json({ reply: message.content, tool: tool, exercise: exercise });
   }
 

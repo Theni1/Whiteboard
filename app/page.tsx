@@ -3,12 +3,14 @@
 import { useState } from "react";
 import NumberInputCard from "@/components/NumberInputCard";
 import CircleCard from "@/components/CircleCard";
-import type { NumberInputExercise, CircleExercise } from "@/lib/schemas";
+import LineCard from "@/components/LineCard";
+import type { NumberInputExercise, CircleExercise, LineExercise } from "@/lib/schemas";
 
 type Message = {
   text: string | null;
   numberExercise?: NumberInputExercise;
   circleExercise?: CircleExercise;
+  lineExercise?: LineExercise;
 };
 
 export default function Home() {
@@ -37,6 +39,9 @@ export default function Home() {
     if (data.tool === "create_circle_exercise") {
       tutorMessage.circleExercise = data.exercise;
     }
+    if (data.tool === "create_line_exercise") {
+      tutorMessage.lineExercise = data.exercise;
+    }
     setMessages((prev) => [...prev, tutorMessage]);
   }
 
@@ -50,6 +55,7 @@ export default function Home() {
               {message.text && <p>{message.text}</p>}
               {message.numberExercise && <NumberInputCard exercise={message.numberExercise} />}
               {message.circleExercise && <CircleCard exercise={message.circleExercise} />}
+              {message.lineExercise && <LineCard exercise={message.lineExercise} />}
             </div>
           ))}
         </div>
