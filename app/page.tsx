@@ -14,6 +14,7 @@ export default function Home() {
   const [input, setInput] = useState("");
 
   async function send() {
+    if (!input) return;
     setMessages((prev) => [...prev, { text: "You: " + input }]);
     setInput("");
 
@@ -48,6 +49,7 @@ export default function Home() {
             className="flex-1 rounded border border-stone-500 bg-white px-3 py-2"
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && send()}
           />
           <button className="rounded border border-stone-500 bg-white px-4" onClick={send}>
             Send
