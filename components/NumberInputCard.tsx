@@ -2,13 +2,20 @@ import { useState } from "react";
 import { Mafs, Point, Line, Text } from "mafs";
 import type { NumberInputExercise } from "@/lib/schemas";
 
-export default function NumberInputCard(props: { exercise: NumberInputExercise }) {
+export default function NumberInputCard(props: {
+  exercise: NumberInputExercise;
+  onCheck: (summary: string) => void;
+}) {
   const [input, setInput] = useState("");
   const [result, setResult] = useState("");
 
   function check() {
     const correct = Number(input) === props.exercise.answer;
     setResult(correct ? "Correct!" : "Not quite, try again.");
+    props.onCheck(
+      `[Result] Task: "${props.exercise.task}" (answer ${props.exercise.answer}). ` +
+        `Student answered ${input}. ${correct ? "Correct" : "Incorrect"}.`
+    );
   }
 
   function findPoint(id: string) {

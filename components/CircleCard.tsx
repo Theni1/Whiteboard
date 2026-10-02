@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Mafs, Coordinates, Circle, useMovablePoint } from "mafs";
 import type { CircleExercise } from "@/lib/schemas";
 
-export default function CircleCard(props: { exercise: CircleExercise }) {
+export default function CircleCard(props: {
+  exercise: CircleExercise;
+  onCheck: (summary: string) => void;
+}) {
   const center = useMovablePoint([0, 0]);
   const edge = useMovablePoint([2, 0]);
 
@@ -18,6 +21,11 @@ export default function CircleCard(props: { exercise: CircleExercise }) {
       Math.round(center.y) === props.exercise.center.y &&
       Math.abs(radius - props.exercise.radius) < 0.2;
     setResult(correct ? "Correct!" : "Not quite, try again.");
+    props.onCheck(
+      `[Result] Task: "${props.exercise.task}". ` +
+        `Student drew center (${center.x.toFixed(1)}, ${center.y.toFixed(1)}), radius ${radius.toFixed(1)}. ` +
+        `${correct ? "Correct" : "Incorrect"}.`
+    );
   }
 
   return (

@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Mafs, Coordinates, Line, useMovablePoint } from "mafs";
 import type { LineExercise } from "@/lib/schemas";
 
-export default function LineCard(props: { exercise: LineExercise }) {
+export default function LineCard(props: {
+  exercise: LineExercise;
+  onCheck: (summary: string) => void;
+}) {
   const a = useMovablePoint([-2, -1]);
   const b = useMovablePoint([2, 1]);
 
@@ -16,6 +19,11 @@ export default function LineCard(props: { exercise: LineExercise }) {
       Math.abs(slope - props.exercise.slope) < 0.2 &&
       Math.abs(intercept - props.exercise.intercept) < 0.2;
     setResult(correct ? "Correct!" : "Not quite, try again.");
+    props.onCheck(
+      `[Result] Task: "${props.exercise.task}". ` +
+        `Student drew y = ${slope.toFixed(1)}x + ${intercept.toFixed(1)}. ` +
+        `${correct ? "Correct" : "Incorrect"}.`
+    );
   }
 
   return (

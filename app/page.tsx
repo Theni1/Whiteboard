@@ -17,15 +17,18 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
 
-  async function send() {
+  function send() {
     if (!input) return;
     setMessages((prev) => [...prev, { text: "You: " + input }]);
     setInput("");
+    ask(input);
+  }
 
+  async function ask(text: string) {
     const response = await fetch("/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: input }),
+      body: JSON.stringify({ message: text }),
     });
     const data = await response.json();
 
@@ -53,9 +56,9 @@ export default function Home() {
           {messages.map((message, i) => (
             <div key={i}>
               {message.text && <p>{message.text}</p>}
-              {message.numberExercise && <NumberInputCard exercise={message.numberExercise} />}
-              {message.circleExercise && <CircleCard exercise={message.circleExercise} />}
-              {message.lineExercise && <LineCard exercise={message.lineExercise} />}
+              {message.numberExercise && <NumberInputCard exercise={message.numberExercise} onCheck={ask} />}
+              {message.circleExercise && <CircleCard exercise={message.circleExercise} onCheck={ask} />}
+              {message.lineExercise && <LineCard exercise={message.lineExercise} onCheck={ask} />}
             </div>
           ))}
         </div>

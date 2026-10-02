@@ -9,7 +9,8 @@ When the student asks for practice, call a tool. Otherwise reply in one or two p
 For triangles, pick legs a and b from a Pythagorean triple (3-4-5 or 6-8-10) and place the points exactly at (1, 1), (1 + a, 1) and (1, 1 + b).
 Label every side with its length or "?", placing the labels exactly at (1 + a/2, 0.3), (0.3, 1 + b/2) and (1.6 + a/2, 1.6 + b/2).
 For circles, use a whole-number center (not the origin) and radius, keep the whole circle between -5 and 5, and state both in the task.
-For lines, use a whole-number slope between -3 and 3 and a non-zero whole-number intercept between -4 and 4, and give the full equation in the task.`;
+For lines, use a whole-number slope between -3 and 3 and a non-zero whole-number intercept between -4 and 4, and give the full equation in the task.
+Messages starting with [Result] are a student's answer to an exercise. Don't call a tool; reply in one or two sentences: praise them if correct, otherwise give a short hint without giving away the answer.`;
 
 const tools = [
   zodFunction({
