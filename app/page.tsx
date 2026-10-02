@@ -7,6 +7,7 @@ import LineCard from "@/components/LineCard";
 import type { NumberInputExercise, CircleExercise, LineExercise } from "@/lib/schemas";
 
 type Message = {
+  role: "student" | "tutor";
   text: string | null;
   numberExercise?: NumberInputExercise;
   circleExercise?: CircleExercise;
@@ -19,7 +20,7 @@ export default function Home() {
 
   function send() {
     if (!input) return;
-    setMessages((prev) => [...prev, { text: "You: " + input }]);
+    setMessages((prev) => [...prev, { role: "student", text: input }]);
     setInput("");
     ask(input);
   }
@@ -32,10 +33,7 @@ export default function Home() {
     });
     const data = await response.json();
 
-    const tutorMessage: Message = { text: null };
-    if (data.reply) {
-      tutorMessage.text = "Tutor: " + data.reply;
-    }
+    const tutorMessage: Message = { role: "tutor", text: data.reply };
     if (data.tool === "create_number_input_exercise") {
       tutorMessage.numberExercise = data.exercise;
     }
@@ -55,7 +53,12 @@ export default function Home() {
         <div className="flex-1 overflow-y-auto py-4">
           {messages.map((message, i) => (
             <div key={i}>
-              {message.text && <p>{message.text}</p>}
+              {message.text && message.role === "student" && (
+                <p className="my-3 ml-auto w-fit max-w-[80%] rounded bg-stone-200 px-3 py-2">{message.text}</p>
+              )}
+              {message.text && message.role === "tutor" && (
+                <p className="my-3 max-w-[80%] border-l-2 border-stone-400 pl-3">{message.text}</p>
+              )}
               {message.numberExercise && <NumberInputCard exercise={message.numberExercise} onCheck={ask} />}
               {message.circleExercise && <CircleCard exercise={message.circleExercise} onCheck={ask} />}
               {message.lineExercise && <LineCard exercise={message.lineExercise} onCheck={ask} />}
