@@ -19,11 +19,12 @@ export default function LineCard(props: {
       Math.abs(slope - props.exercise.slope) < 0.2 &&
       Math.abs(intercept - props.exercise.intercept) < 0.2;
     setResult(correct ? "Correct!" : "Not quite, try again.");
-    props.onCheck(
-      `[Result] Task: "${props.exercise.task}". ` +
-        `Student drew y = ${slope.toFixed(1)}x + ${intercept.toFixed(1)}. ` +
-        `${correct ? "Correct" : "Incorrect"}.`
-    );
+    if (!correct) {
+      props.onCheck(
+        `[Result] Task: "${props.exercise.task}". ` +
+          `Student drew y = ${slope.toFixed(1)}x + ${intercept.toFixed(1)}.`
+      );
+    }
   }
 
   return (

@@ -21,11 +21,12 @@ export default function CircleCard(props: {
       Math.round(center.y) === props.exercise.center.y &&
       Math.abs(radius - props.exercise.radius) < 0.2;
     setResult(correct ? "Correct!" : "Not quite, try again.");
-    props.onCheck(
-      `[Result] Task: "${props.exercise.task}". ` +
-        `Student drew center (${center.x.toFixed(1)}, ${center.y.toFixed(1)}), radius ${radius.toFixed(1)}. ` +
-        `${correct ? "Correct" : "Incorrect"}.`
-    );
+    if (!correct) {
+      props.onCheck(
+        `[Result] Task: "${props.exercise.task}". ` +
+          `Student drew center (${center.x.toFixed(1)}, ${center.y.toFixed(1)}), radius ${radius.toFixed(1)}.`
+      );
+    }
   }
 
   return (

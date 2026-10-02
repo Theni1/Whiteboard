@@ -12,10 +12,12 @@ export default function NumberInputCard(props: {
   function check() {
     const correct = Number(input) === props.exercise.answer;
     setResult(correct ? "Correct!" : "Not quite, try again.");
-    props.onCheck(
-      `[Result] Task: "${props.exercise.task}" (answer ${props.exercise.answer}). ` +
-        `Student answered ${input}. ${correct ? "Correct" : "Incorrect"}.`
-    );
+    if (!correct) {
+      props.onCheck(
+        `[Result] Task: "${props.exercise.task}" (answer ${props.exercise.answer}). ` +
+          `Student answered ${input}.`
+      );
+    }
   }
 
   function findPoint(id: string) {
